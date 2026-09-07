@@ -154,6 +154,7 @@ export type Database = {
           phone: string
           savedAddress: string | null
           telegramId: string | null
+          telegramUsername: string | null
         }
         Insert: {
           avatarUrl?: string | null
@@ -165,6 +166,7 @@ export type Database = {
           phone: string
           savedAddress?: string | null
           telegramId?: string | null
+          telegramUsername?: string | null
         }
         Update: {
           avatarUrl?: string | null
@@ -176,6 +178,7 @@ export type Database = {
           phone?: string
           savedAddress?: string | null
           telegramId?: string | null
+          telegramUsername?: string | null
         }
         Relationships: []
       }
