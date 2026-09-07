@@ -159,6 +159,18 @@ export default function Profile() {
           </div>
         )}
 
+        {(customer as any)?.telegramUsername && (
+          <a
+            href={`https://t.me/${(customer as any).telegramUsername}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary"
+            data-testid="text-telegram-username"
+          >
+            <Send className="h-3.5 w-3.5" />@{(customer as any).telegramUsername}
+          </a>
+        )}
+
         {/* Telefon tahrirlash */}
         {editingPhone ? (
           <div className="flex flex-col items-center gap-1 mb-2">
