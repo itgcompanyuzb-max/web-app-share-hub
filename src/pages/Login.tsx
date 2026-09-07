@@ -1,70 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { useLoginCustomer, useSearchCustomer } from "@workspace/api-client-react";
 import { setCustomerSession } from "@/lib/auth";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ShoppingBag } from "lucide-react";
+import { Send, ShieldCheck } from "lucide-react";
 import logoUrl from "@/assets/como-logo.jpg";
-const logo = { url: logoUrl };
 import { useToast } from "@/hooks/use-toast";
+import { isTelegram, requestContact, tg, tgReady, tgUser } from "@/lib/telegram";
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const searchCustomer = useSearchCustomer();
-  const loginCustomer = useLoginCustomer();
+  const [loading, setLoading] = useState(false);
+  const [inTelegram, setInTelegram] = useState(true);
+  const [user, setUser] = useState<ReturnType<typeof tgUser>>(null);
 
-  const [step, setStep] = useState<"phone" | "name">("phone");
-  const [phone, setPhone] = useState("+998");
-  const [name, setName] = useState("");
+  useEffect(() => {
+    tgReady();
+    setInTelegram(isTelegram());
+    setUser(tgUser());
+  }, []);
 
-  const handlePhoneSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (phone.length < 13) {
-      toast({ title: "Xato", description: "Telefon raqamni to'g'ri kiriting", variant: "destructive" });
-      return;
-    }
-
-    searchCustomer.mutate(
-      { data: { phone } },
-      {
-        onSuccess: (data) => {
-          if (data.exists && data.customer) {
-            setCustomerSession(data.customer);
-            setLocation("/");
-          } else {
-            setStep("name");
-          }
-        },
-        onError: () => {
-          toast({ title: "Xato", description: "Xatolik yuz berdi", variant: "destructive" });
-        }
-      }
-    );
+  const authorize = async (contactResponse?: string, phone?: string) => {
+    const webApp = tg();
+    const res = await fetch("/api/telegram/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        initData: webApp?.initData ?? "",
+        contactResponse: contactResponse ?? "",
+        phone: phone ?? "",
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error ?? "Xatolik");
+    return data;
   };
 
-  const handleNameSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (name.length < 2) {
-      toast({ title: "Xato", description: "Ismni kiriting", variant: "destructive" });
+  const handleShareContact = async () => {
+    if (!isTelegram()) {
+      toast({
+        title: "Telegram kerak",
+        description: "Iltimos, ilovani Telegram bot ichidan oching",
+        variant: "destructive",
+      });
       return;
     }
-
-    loginCustomer.mutate(
-      { data: { phone, name } },
-      {
-        onSuccess: (customer) => {
-          setCustomerSession(customer);
-          setLocation("/");
-        },
-        onError: () => {
-          toast({ title: "Xato", description: "Ro'yxatdan o'tishda xatolik", variant: "destructive" });
-        }
+    setLoading(true);
+    try {
+      const result = await requestContact();
+      if (!result.ok) {
+        setLoading(false);
+        toast({
+          title: "Kontakt ulashilmadi",
+          description: "Davom etish uchun raqamingizni ulashing",
+          variant: "destructive",
+        });
+        return;
       }
-    );
+      const customer = await authorize(result.response, result.contact?.phone_number);
+      setCustomerSession(customer);
+      tg()?.HapticFeedback?.notificationOccurred?.("success");
+      setLocation("/");
+    } catch (e: any) {
+      toast({
+        title: "Xato",
+        description: e?.message ?? "Kirishda xatolik yuz berdi",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,61 +81,39 @@ export default function Login() {
         className="w-full max-w-sm glass-panel p-8 rounded-[2rem] text-center"
       >
         <img
-          src={logo.url}
+          src={user?.photo_url || logoUrl}
           alt="Como Pizza logotipi"
           className="mx-auto w-24 h-24 rounded-full object-cover shadow-lg mb-5 ring-4 ring-primary/15"
         />
         <div className="mx-auto mb-5 h-1 w-24 rounded-full flag-stripe" />
         <h1 className="font-display text-3xl tracking-wide text-primary mb-1">Como Pizza</h1>
-        <p className="text-muted-foreground mb-8 text-sm">The spirit of Italy — buyurtma berish uchun kiring</p>
+        <p className="text-muted-foreground mb-6 text-sm">
+          {user?.first_name
+            ? `Salom, ${user.first_name}! Davom etish uchun raqamingizni ulashing.`
+            : "Buyurtma berish uchun Telegram orqali kiring"}
+        </p>
 
-
-        {step === "phone" ? (
-          <form onSubmit={handlePhoneSubmit} className="space-y-4 text-left">
-            <div className="space-y-2">
-              <Label htmlFor="phone">Telefon raqam</Label>
-              <Input
-                id="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+998 90 123 45 67"
-                className="h-12 rounded-xl bg-white/50 dark:bg-black/50 backdrop-blur-md border-white/20 text-lg"
-                data-testid="input-phone"
-                autoFocus
-              />
-            </div>
+        {inTelegram ? (
+          <>
             <Button
-              type="submit"
-              className="w-full h-12 rounded-xl text-lg font-medium"
-              disabled={searchCustomer.isPending}
-              data-testid="button-continue-phone"
+              onClick={handleShareContact}
+              disabled={loading}
+              className="w-full h-12 rounded-xl text-base font-medium gap-2"
+              data-testid="button-share-contact"
             >
-              {searchCustomer.isPending ? "Kuting..." : "Davom etish"}
+              <Send className="w-5 h-5" />
+              {loading ? "Kuting..." : "Kontaktni ulashish"}
             </Button>
-          </form>
+            <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Raqamingiz faqat buyurtma uchun ishlatiladi
+            </p>
+          </>
         ) : (
-          <form onSubmit={handleNameSubmit} className="space-y-4 text-left">
-            <div className="space-y-2">
-              <Label htmlFor="name">Ismingiz</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ali"
-                className="h-12 rounded-xl bg-white/50 dark:bg-black/50 backdrop-blur-md border-white/20 text-lg"
-                data-testid="input-name"
-                autoFocus
-              />
-            </div>
-            <Button
-              type="submit"
-              className="w-full h-12 rounded-xl text-lg font-medium"
-              disabled={loginCustomer.isPending}
-              data-testid="button-register"
-            >
-              {loginCustomer.isPending ? "Kuting..." : "Boshlash"}
-            </Button>
-          </form>
+          <div className="rounded-2xl bg-muted/60 p-4 text-sm text-muted-foreground">
+            Bu ilova Telegram mini-ilovasi sifatida ishlaydi. Iltimos, botimizni oching va{" "}
+            <span className="font-semibold text-foreground">"Ochish"</span> tugmasini bosing.
+          </div>
         )}
       </motion.div>
     </div>

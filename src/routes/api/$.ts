@@ -133,6 +133,93 @@ async function handle(request: Request, splat: string): Promise<Response> {
     if (error) return err(error.message, 500);
     return json(data);
   }
+  // ---- telegram mini app auth ----
+  if (path === "telegram/auth" && method === "POST") {
+    const b = await body(request);
+    const token = process.env["TELEGRAM_BOT_TOKEN"];
+    if (!token) return err("Telegram bot sozlanmagan", 500);
+
+    const { createHmac } = await import("crypto");
+    const checkTelegram = (raw: string) => {
+      if (!raw) return null;
+      const params = new URLSearchParams(raw);
+      const hash = params.get("hash");
+      if (!hash) return null;
+      params.delete("hash");
+      const dataCheck = [...params.entries()]
+        .map(([k, v]) => `${k}=${v}`)
+        .sort()
+        .join("\n");
+      const secret = createHmac("sha256", "WebAppData").update(token).digest();
+      const computed = createHmac("sha256", secret).update(dataCheck).digest("hex");
+      if (computed !== hash) return null;
+      return params;
+    };
+
+    const initParams = checkTelegram(String(b.initData ?? ""));
+    if (!initParams) return err("Telegram ma'lumoti tasdiqlanmadi", 401);
+
+    let tgUser: Json = {};
+    try {
+      tgUser = JSON.parse(initParams.get("user") ?? "{}");
+    } catch {
+      tgUser = {};
+    }
+    if (!tgUser.id) return err("Telegram foydalanuvchisi topilmadi", 401);
+
+    // Kontakt (telefon raqam)
+    let phone: string | null = null;
+    const contactParams = checkTelegram(String(b.contactResponse ?? ""));
+    if (contactParams) {
+      try {
+        const c = JSON.parse(contactParams.get("contact") ?? "{}");
+        if (c?.phone_number && String(c.user_id) === String(tgUser.id)) phone = String(c.phone_number);
+      } catch {
+        /* ignore */
+      }
+    }
+    if (!phone && b.phone) phone = String(b.phone);
+    if (!phone) return err("Telefon raqam ulashilmadi", 400);
+    if (!phone.startsWith("+")) phone = `+${phone.replace(/[^0-9]/g, "")}`;
+
+    const fullName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(" ").trim() || null;
+    const patch: Json = {
+      name: fullName,
+      telegramId: String(tgUser.id),
+      telegramUsername: tgUser.username ?? null,
+    };
+    if (tgUser.photo_url) patch.avatarUrl = tgUser.photo_url;
+
+    const { data: byTg } = await sb
+      .from("customers")
+      .select("*")
+      .eq("telegramId", String(tgUser.id))
+      .maybeSingle();
+    const { data: byPhone } = byTg
+      ? { data: null }
+      : await sb.from("customers").select("*").eq("phone", phone).maybeSingle();
+    const existing = byTg ?? byPhone;
+
+    if (existing) {
+      const { data: upd, error: uErr } = await sb
+        .from("customers")
+        .update({ ...patch, phone })
+        .eq("id", existing.id)
+        .select()
+        .single();
+      if (uErr) return err(uErr.message, 500);
+      return json(upd);
+    }
+
+    const { data: created, error: cErr } = await sb
+      .from("customers")
+      .insert({ ...patch, phone })
+      .select()
+      .single();
+    if (cErr) return err(cErr.message, 500);
+    return json(created);
+  }
+
   if (path === "customers/logout") return json({ success: true });
   if (path === "customers/me") {
     if (!customerId) return err("unauthorized", 401);
