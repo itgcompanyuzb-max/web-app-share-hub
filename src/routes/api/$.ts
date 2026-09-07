@@ -52,8 +52,8 @@ async function enrichOrders(rows: any[]) {
       ? [...new Set(rows.map((o) => o.courierId).filter(Boolean))]
       : [-1]),
   ]);
-  const cm = new Map((customers ?? []).map((c: any) => [c.id, c]));
-  const km = new Map((couriers ?? []).map((c: any) => [c.id, c]));
+  const cm = new Map<number, any>((customers ?? []).map((c: any) => [c.id, c] as [number, any]));
+  const km = new Map<number, any>((couriers ?? []).map((c: any) => [c.id, c] as [number, any]));
   return rows.map((o) => {
     const c = cm.get(o.customerId);
     const k = o.courierId ? km.get(o.courierId) : null;
@@ -76,7 +76,7 @@ async function productsWithExtras(rows: any[], customerId: number | null) {
   const { data: cats } = catIds.length
     ? await sb.from("categories").select("id,name").in("id", catIds)
     : { data: [] };
-  const cm = new Map((cats ?? []).map((c: any) => [c.id, c.name]));
+  const cm = new Map<number, any>((cats ?? []).map((c: any) => [c.id, c.name] as [number, any]));
   let likedIds = new Set<number>();
   if (customerId) {
     const { data: liked } = await sb.from("liked").select("productId").eq("customerId", customerId);
@@ -637,7 +637,7 @@ async function handle(request: Request, splat: string): Promise<Response> {
   if (path === "admin/messages" && method === "GET") {
     const { data: msgs } = await sb.from("messages").select("*").order("createdAt", { ascending: false });
     const { data: customers } = await sb.from("customers").select("id,name,phone");
-    const cm = new Map((customers ?? []).map((c: any) => [c.id, c]));
+    const cm = new Map<number, any>((customers ?? []).map((c: any) => [c.id, c] as [number, any]));
     const seen = new Map<number, any>();
     for (const m of msgs ?? []) {
       if (!seen.has(m.customerId)) {
