@@ -98,7 +98,7 @@ function CourierTrackingMap({ order, onClose }: { order: any; onClose: () => voi
         }
       } catch {}
     };
-    intervalRef.current = setInterval(fetchOrder, 5000);
+    intervalRef.current = setInterval(fetchOrder, 3000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [order.id]);
 

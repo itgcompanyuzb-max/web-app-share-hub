@@ -102,7 +102,7 @@ export default function CourierApp() {
   const [expandedOrder, setExpandedOrder] = useState<number | null>(null);
   const [accepting, setAccepting] = useState<number | null>(null);
   const [delivering, setDelivering] = useState<number | null>(null);
-  const locationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const locationIntervalRef = useRef<{ stop: () => void } | null>(null);
 
   const fetchOrders = async (courierId: number) => {
     setOrdersLoading(true);
@@ -166,10 +166,7 @@ export default function CourierApp() {
             { enableHighAccuracy: true }
           );
         }, 5000);
-        locationIntervalRef.current = {
-          [Symbol.toPrimitive]: () => 0,
-          stop: () => { clearInterval(iv); navigator.geolocation.clearWatch(watchId); },
-        } as any;
+        locationIntervalRef.current = { stop: () => { clearInterval(iv); navigator.geolocation.clearWatch(watchId); } };
       },
       () => {
         setLocationError("GPS ruxsati berilmadi. Qurilma sozlamalarini tekshiring.");
@@ -179,7 +176,7 @@ export default function CourierApp() {
 
   const stopSharing = () => {
     if (locationIntervalRef.current) {
-      clearInterval(locationIntervalRef.current);
+      locationIntervalRef.current.stop();
       locationIntervalRef.current = null;
     }
     setSharing(false);
