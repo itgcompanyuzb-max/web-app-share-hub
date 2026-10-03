@@ -844,9 +844,55 @@ async function handle(request: Request, splat: string): Promise<Response> {
   // ---- chef ----
   if (path === "chef/login" && method === "POST") {
     const b = await body(request);
-    const pw = await getSetting("chefPassword", "chef123");
-    if (b.password !== pw) return err("Parol noto'g'ri", 401);
-    return json({ success: true });
+    const chefs = JSON.parse(await getSetting("chefs", "[]")) as any[];
+    const login = String(b.login ?? "").trim();
+    const found = chefs.find((c) => c.login === login && c.password === b.password);
+    if (found) return json({ success: true, chef: { id: found.id, name: found.name } });
+    if (chefs.length === 0) {
+      const pw = await getSetting("chefPassword", "chef123");
+      if (b.password === pw) return json({ success: true });
+    }
+    return err("Login yoki parol noto'g'ri", 401);
+  }
+  if (path === "admin/chefs") {
+    const chefs = JSON.parse(await getSetting("chefs", "[]")) as any[];
+    if (method === "GET") return json(chefs);
+    if (method === "POST") {
+      const b = await body(request);
+      const name = String(b.name ?? "").trim();
+      const login = String(b.login ?? "").trim();
+      const password = String(b.password ?? "");
+      if (!name || !login || password.length < 4) return err("Ism, login va kamida 4 belgili parol kerak");
+      if (chefs.some((c) => c.login === login)) return err("Bu login band");
+      const chef = { id: Date.now(), name, login, password, createdAt: new Date().toISOString() };
+      chefs.push(chef);
+      await setSetting("chefs", JSON.stringify(chefs));
+      return json(chef);
+    }
+  }
+  if (seg[0] === "admin" && seg[1] === "chefs" && seg.length === 3) {
+    const id = num(seg[2]);
+    let chefs = JSON.parse(await getSetting("chefs", "[]")) as any[];
+    if (method === "DELETE") {
+      chefs = chefs.filter((c) => c.id !== id);
+      await setSetting("chefs", JSON.stringify(chefs));
+      return json({ success: true });
+    }
+    if (method === "PATCH" || method === "PUT") {
+      const b = await body(request);
+      chefs = chefs.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              ...(b.name ? { name: String(b.name) } : {}),
+              ...(b.login ? { login: String(b.login) } : {}),
+              ...(b.password ? { password: String(b.password) } : {}),
+            }
+          : c,
+      );
+      await setSetting("chefs", JSON.stringify(chefs));
+      return json({ success: true });
+    }
   }
   if (path === "chef/orders" && method === "GET") {
     const { data } = await sb

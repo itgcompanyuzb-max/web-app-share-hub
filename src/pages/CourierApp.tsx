@@ -149,12 +149,27 @@ export default function CourierApp() {
       (pos) => {
         sendLocation(session.id, pos.coords.latitude, pos.coords.longitude);
         setSharing(true);
-        locationIntervalRef.current = setInterval(() => {
+        let last = Date.now();
+        const watchId = navigator.geolocation.watchPosition(
+          (p) => {
+            if (Date.now() - last < 3000) return;
+            last = Date.now();
+            sendLocation(session.id, p.coords.latitude, p.coords.longitude);
+          },
+          () => {},
+          { enableHighAccuracy: true, maximumAge: 2000 }
+        );
+        const iv = setInterval(() => {
           navigator.geolocation.getCurrentPosition(
-            (p) => sendLocation(session.id, p.coords.latitude, p.coords.longitude),
-            () => {}
+            (p) => { last = Date.now(); sendLocation(session.id, p.coords.latitude, p.coords.longitude); },
+            () => {},
+            { enableHighAccuracy: true }
           );
-        }, 8000);
+        }, 5000);
+        locationIntervalRef.current = {
+          [Symbol.toPrimitive]: () => 0,
+          stop: () => { clearInterval(iv); navigator.geolocation.clearWatch(watchId); },
+        } as any;
       },
       () => {
         setLocationError("GPS ruxsati berilmadi. Qurilma sozlamalarini tekshiring.");

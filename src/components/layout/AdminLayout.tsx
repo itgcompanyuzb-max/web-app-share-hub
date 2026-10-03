@@ -85,6 +85,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     { href: "/admin/chat", icon: MessageSquare, label: "Chat" },
     { href: "/admin/notifications", icon: Bell, label: "Notifications" },
     { href: "/admin/couriers", icon: Navigation2, label: "Couriers" },
+    { href: "/admin/chefs", icon: Users, label: "Oshpazlar" },
     { href: "/admin/promo-codes", icon: Tag, label: "Promo Codes" },
     { href: "/admin/settings", icon: Settings, label: "Settings" },
   ];

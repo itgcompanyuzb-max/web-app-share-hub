@@ -35,6 +35,7 @@ import Notifications from "@/pages/admin/Notifications";
 import Settings from "@/pages/admin/Settings";
 import AdminCouriers from "@/pages/admin/AdminCouriers";
 import AdminPromoCodes from "@/pages/admin/AdminPromoCodes";
+import AdminChefs from "@/pages/admin/AdminChefs";
 
 // Inject auth headers on every /api request
 const _originalFetch = globalThis.fetch.bind(globalThis);
@@ -103,6 +104,7 @@ function AppRouter() {
       <Route path="/admin/notifications" component={() => <AdminRoute component={Notifications} />} />
       <Route path="/admin/settings" component={() => <AdminRoute component={Settings} />} />
       <Route path="/admin/couriers" component={() => <AdminRoute component={AdminCouriers} />} />
+      <Route path="/admin/chefs" component={() => <AdminRoute component={AdminChefs} />} />
       <Route path="/admin/promo-codes" component={() => <AdminRoute component={AdminPromoCodes} />} />
       <Route component={NotFound} />
     </Switch>
