@@ -34,6 +34,7 @@ function chefHeaders() {
 
 export default function ChefPanel() {
   const [loggedIn, setLoggedIn] = useState(getChefSession());
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
@@ -73,7 +74,7 @@ export default function ChefPanel() {
       const r = await fetch("/api/chef/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ login, password }),
       });
       if (r.ok) {
         localStorage.setItem("chefAuthenticated", "true");
@@ -124,6 +125,13 @@ export default function ChefPanel() {
             <p className="text-sm text-muted-foreground text-center">Oshpaz paneli</p>
           </div>
           <div className="space-y-3">
+            <label className="text-sm font-semibold">Login</label>
+            <Input
+              placeholder="Loginni kiriting"
+              value={login}
+              onChange={e => setLogin(e.target.value)}
+              className="rounded-xl h-12"
+            />
             <label className="text-sm font-semibold">Parol</label>
             <Input
               type="password"
