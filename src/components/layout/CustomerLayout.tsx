@@ -2,13 +2,12 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Home, ShoppingCart, Heart, User, Clock } from "lucide-react";
-import { useGetCart, getGetCartQueryKey, useGetSiteSettings, getGetSiteSettingsQueryKey } from "@workspace/api-client-react";
+import { useGetCart, getGetCartQueryKey } from "@workspace/api-client-react";
 import { StickyBarProvider, useStickyBar } from "@/lib/stickyBar";
 
 function LayoutInner({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { data: cartItems } = useGetCart({ query: { queryKey: getGetCartQueryKey() } });
-  const { data: siteSettings } = useGetSiteSettings({ query: { queryKey: getGetSiteSettingsQueryKey() } });
   const { bottomBar } = useStickyBar();
 
   const cartCount = cartItems?.reduce((acc, item) => acc + item.quantity, 0) || 0;

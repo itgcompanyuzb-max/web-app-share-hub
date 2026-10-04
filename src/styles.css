@@ -74,7 +74,7 @@
   --radius-3xl: calc(var(--radius) + 16px);
 }
 
-/* LIGHT MODE — Como Pizza: terracotta oven, cream dough, Italian flag accents */
+/* Brother&Queen monochrome identity */
 :root {
   --button-outline: rgba(60, 24, 12, 0.12);
   --badge-outline: rgba(60, 24, 12, 0.06);
@@ -84,37 +84,36 @@
   --elevate-1: rgba(60, 24, 12, 0.04);
   --elevate-2: rgba(60, 24, 12, 0.09);
 
-  --background: 36 44% 96%;
-  --foreground: 16 40% 14%;
+  --background: 0 0% 97%;
+  --foreground: 260 9% 9%;
 
-  --border: 30 30% 86%;
+  --border: 0 0% 85%;
 
-  --card: 40 60% 99%;
-  --card-foreground: 16 40% 14%;
-  --card-border: 30 30% 88%;
+  --card: 0 0% 100%;
+  --card-foreground: 260 9% 9%;
+  --card-border: 0 0% 85%;
 
-  --popover: 40 60% 99%;
-  --popover-foreground: 16 40% 14%;
-  --popover-border: 30 30% 88%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 260 9% 9%;
+  --popover-border: 0 0% 85%;
 
-  /* Terracotta pizza-oven primary from the logo */
-  --primary: 14 73% 44%;
-  --primary-foreground: 36 68% 96%;
+  --primary: 260 9% 9%;
+  --primary-foreground: 30 9% 84%;
 
-  --secondary: 34 52% 91%;
-  --secondary-foreground: 16 45% 20%;
+  --secondary: 30 9% 88%;
+  --secondary-foreground: 260 9% 9%;
 
-  --muted: 34 34% 92%;
-  --muted-foreground: 20 15% 42%;
+  --muted: 0 0% 92%;
+  --muted-foreground: 0 0% 40%;
 
-  --accent: 34 60% 88%;
-  --accent-foreground: 14 60% 28%;
+  --accent: 30 9% 84%;
+  --accent-foreground: 260 9% 9%;
 
   --destructive: 4 74% 45%;
   --destructive-foreground: 36 68% 96%;
 
-  --input: 30 30% 86%;
-  --ring: 14 73% 44%;
+  --input: 0 0% 85%;
+  --ring: 260 9% 9%;
 
   --cream: 36 68% 90%;
   --italy-green: 146 58% 32%;
@@ -126,14 +125,14 @@
   --chart-4: 4 70% 52%;
   --chart-5: 22 40% 32%;
 
-  --sidebar: 14 55% 24%;
-  --sidebar-foreground: 36 60% 92%;
-  --sidebar-border: 14 40% 32%;
-  --sidebar-primary: 34 78% 60%;
-  --sidebar-primary-foreground: 16 55% 16%;
-  --sidebar-accent: 14 45% 32%;
-  --sidebar-accent-foreground: 36 60% 94%;
-  --sidebar-ring: 34 78% 60%;
+  --sidebar: 260 9% 9%;
+  --sidebar-foreground: 30 9% 84%;
+  --sidebar-border: 0 0% 28%;
+  --sidebar-primary: 30 9% 84%;
+  --sidebar-primary-foreground: 260 9% 9%;
+  --sidebar-accent: 0 0% 22%;
+  --sidebar-accent-foreground: 30 9% 90%;
+  --sidebar-ring: 30 9% 84%;
 
   --app-font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --app-font-display: "Cinzel", Georgia, serif;
@@ -171,36 +170,36 @@
   --elevate-1: rgba(255, 240, 230, 0.05);
   --elevate-2: rgba(255, 240, 230, 0.1);
 
-  --background: 16 28% 8%;
-  --foreground: 36 46% 94%;
+  --background: 260 9% 9%;
+  --foreground: 30 9% 84%;
 
-  --border: 16 18% 22%;
+  --border: 0 0% 27%;
 
-  --card: 16 24% 12%;
-  --card-foreground: 36 46% 94%;
-  --card-border: 16 18% 22%;
+  --card: 260 7% 14%;
+  --card-foreground: 30 9% 84%;
+  --card-border: 0 0% 27%;
 
-  --popover: 16 24% 12%;
-  --popover-foreground: 36 46% 94%;
-  --popover-border: 16 18% 22%;
+  --popover: 260 7% 14%;
+  --popover-foreground: 30 9% 84%;
+  --popover-border: 0 0% 27%;
 
-  --primary: 18 82% 56%;
-  --primary-foreground: 16 40% 10%;
+  --primary: 30 9% 84%;
+  --primary-foreground: 260 9% 9%;
 
-  --secondary: 16 18% 18%;
-  --secondary-foreground: 36 46% 94%;
+  --secondary: 0 0% 22%;
+  --secondary-foreground: 30 9% 84%;
 
-  --muted: 16 16% 18%;
-  --muted-foreground: 30 14% 66%;
+  --muted: 0 0% 22%;
+  --muted-foreground: 30 5% 67%;
 
-  --accent: 16 22% 22%;
-  --accent-foreground: 36 60% 90%;
+  --accent: 0 0% 28%;
+  --accent-foreground: 30 9% 90%;
 
   --destructive: 4 62% 42%;
   --destructive-foreground: 36 46% 94%;
 
-  --input: 16 18% 24%;
-  --ring: 18 82% 56%;
+  --input: 0 0% 28%;
+  --ring: 30 9% 84%;
 
   --cream: 36 40% 82%;
   --italy-green: 146 45% 44%;
@@ -212,14 +211,14 @@
   --chart-4: 4 70% 56%;
   --chart-5: 30 25% 60%;
 
-  --sidebar: 16 30% 11%;
-  --sidebar-foreground: 36 40% 90%;
-  --sidebar-border: 16 18% 20%;
-  --sidebar-primary: 18 82% 56%;
-  --sidebar-primary-foreground: 16 40% 10%;
-  --sidebar-accent: 16 20% 18%;
-  --sidebar-accent-foreground: 36 40% 92%;
-  --sidebar-ring: 18 82% 56%;
+  --sidebar: 260 9% 9%;
+  --sidebar-foreground: 30 9% 84%;
+  --sidebar-border: 0 0% 28%;
+  --sidebar-primary: 30 9% 84%;
+  --sidebar-primary-foreground: 260 9% 9%;
+  --sidebar-accent: 0 0% 22%;
+  --sidebar-accent-foreground: 30 9% 90%;
+  --sidebar-ring: 30 9% 84%;
 }
 
 @layer base {

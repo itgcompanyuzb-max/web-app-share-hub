@@ -10,8 +10,6 @@ import {
   getListCategoriesQueryKey,
   useListBanners,
   getListBannersQueryKey,
-  useGetSiteSettings,
-  getGetSiteSettingsQueryKey,
   useAddToCart,
   getGetCartQueryKey,
 } from "@workspace/api-client-react";
@@ -31,7 +29,6 @@ export default function Home() {
   const [showRestModal, setShowRestModal] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: siteSettings } = useGetSiteSettings({ query: { queryKey: getGetSiteSettingsQueryKey() } });
 
   const { data: banners, isLoading: loadingBanners } = useListBanners({ query: { queryKey: getListBannersQueryKey() } });
   const { data: categories, isLoading: loadingCategories } = useListCategories({ query: { queryKey: getListCategoriesQueryKey() } });
