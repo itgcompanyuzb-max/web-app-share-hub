@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useAdminLogout } from "@workspace/api-client-react";
 import { clearAdminSession } from "@/lib/auth";
+import logo from "@/assets/brother-queen-logo.asset.json";
 
 const ADMIN_LANG_KEY = "admin_lang";
 
@@ -81,6 +82,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     { href: "/admin/categories", icon: FolderTree, label: "Categories" },
     { href: "/admin/banners", icon: ImageIcon, label: "Banners" },
     { href: "/admin/delivery", icon: Truck, label: "Delivery" },
+    { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
     { href: "/admin/customers", icon: Users, label: "Customers" },
     { href: "/admin/chat", icon: MessageSquare, label: "Chat" },
     { href: "/admin/notifications", icon: Bell, label: "Notifications" },
@@ -94,7 +96,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-muted/30 flex">
       <aside className="w-64 bg-card border-r border-border hidden md:flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-border justify-between">
-          <h1 className="text-xl font-bold text-primary">Como Pizza Admin</h1>
+          <div className="flex items-center gap-2"><img src={logo.url} alt="Brother&Queen" className="h-10 w-10 object-cover" /><h1 className="text-sm font-bold text-foreground">Brother&Queen</h1></div>
           <div className="flex items-center gap-1">
             <button
               onClick={toggleTheme}
@@ -154,7 +156,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
-          <h1 className="text-xl font-bold text-primary md:hidden">Como Pizza Admin</h1>
+          <h1 className="text-lg font-bold text-primary md:hidden">Brother&Queen</h1>
           <div className="ml-auto flex items-center gap-2">
             <div className="hidden md:flex gap-1">
               {(["uz", "ru"] as const).map(l => (

@@ -178,7 +178,6 @@ async function handle(request: Request, splat: string): Promise<Response> {
         /* ignore */
       }
     }
-    if (!phone && b.phone) phone = String(b.phone);
     if (!phone) return err("Telefon raqam ulashilmadi", 400);
     if (!phone.startsWith("+")) phone = `+${phone.replace(/[^0-9]/g, "")}`;
 
@@ -504,6 +503,7 @@ async function handle(request: Request, splat: string): Promise<Response> {
   // ---- orders ----
   if (path === "orders" || path === "admin/orders") {
     if (method === "GET") {
+      if (path === "orders" && !customerId) return err("unauthorized", 401);
       let query = sb.from("orders").select("*");
       if (path === "orders" && customerId && !q.get("all")) query = query.eq("customerId", customerId);
       if (q.get("status")) query = query.eq("status", q.get("status"));

@@ -36,6 +36,7 @@ import Settings from "@/pages/admin/Settings";
 import AdminCouriers from "@/pages/admin/AdminCouriers";
 import AdminPromoCodes from "@/pages/admin/AdminPromoCodes";
 import AdminChefs from "@/pages/admin/AdminChefs";
+import AdminOrders from "@/pages/admin/AdminOrders";
 
 // Inject auth headers on every /api request
 const _originalFetch = globalThis.fetch.bind(globalThis);
@@ -99,6 +100,7 @@ function AppRouter() {
       <Route path="/admin/categories" component={() => <AdminRoute component={Categories} />} />
       <Route path="/admin/banners" component={() => <AdminRoute component={Banners} />} />
       <Route path="/admin/delivery" component={() => <AdminRoute component={Delivery} />} />
+      <Route path="/admin/orders" component={() => <AdminRoute component={AdminOrders} />} />
       <Route path="/admin/customers" component={() => <AdminRoute component={Customers} />} />
       <Route path="/admin/chat" component={() => <AdminRoute component={AdminChat} />} />
       <Route path="/admin/notifications" component={() => <AdminRoute component={Notifications} />} />

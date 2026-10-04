@@ -4,17 +4,19 @@ import { ComoMount } from "@/como-mount";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Como Pizza — The spirit of Italy" },
+      { title: "Brother&Queen — Menyu va buyurtmalar" },
       {
         name: "description",
         content:
-          "Como Pizza — o'tin pechida pishirilgan italyan pitsalari. Onlayn buyurtma bering va tez yetkazib berish xizmatidan foydalaning.",
+          "Brother&Queen menyusi va buyurtmalar. Telegram orqali buyurtma bering va yetkazib berishni kuzating.",
       },
-      { property: "og:title", content: "Como Pizza — The spirit of Italy" },
+      { property: "og:title", content: "Brother&Queen — Menyu va buyurtmalar" },
       {
         property: "og:description",
-        content: "O'tin pechida pishirilgan italyan pitsalari. Onlayn buyurtma va tez yetkazib berish.",
+        content: "Brother&Queen menyusi va buyurtmalar. Telegram orqali buyurtma bering.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ComoMount,

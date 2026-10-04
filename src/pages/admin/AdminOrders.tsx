@@ -180,7 +180,7 @@ export default function AdminOrders() {
       const res = await fetch(url);
       return res.json();
     },
-    refetchInterval: 15000,
+    refetchInterval: expandedId !== null ? 3000 : 15000,
   });
   const { data: couriers = [] } = useListCouriers({ query: { queryKey: getListCouriersQueryKey() } });
   const updateStatus = useUpdateOrderStatus();
