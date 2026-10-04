@@ -4,7 +4,7 @@ import { setCustomerSession } from "@/lib/auth";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Send, ShieldCheck } from "lucide-react";
-import logoUrl from "@/assets/como-logo.jpg";
+import logo from "@/assets/brother-queen-logo.asset.json";
 import { useToast } from "@/hooks/use-toast";
 import { isTelegram, requestContact, tg, tgReady, tgUser } from "@/lib/telegram";
 
@@ -74,19 +74,18 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-secondary via-background to-background flex flex-col items-center justify-center p-4">
+    <div className="min-h-dvh bg-background flex flex-col items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-sm glass-panel p-8 rounded-[2rem] text-center"
+        className="w-full max-w-sm text-center"
       >
         <img
-          src={user?.photo_url || logoUrl}
-          alt="Como Pizza logotipi"
-          className="mx-auto w-24 h-24 rounded-full object-cover shadow-lg mb-5 ring-4 ring-primary/15"
+          src={logo.url}
+          alt="Brother&Queen logotipi"
+          className="mx-auto w-44 h-44 object-contain mb-5"
         />
-        <div className="mx-auto mb-5 h-1 w-24 rounded-full flag-stripe" />
-        <h1 className="font-display text-3xl tracking-wide text-primary mb-1">Como Pizza</h1>
+        <h1 className="font-display text-3xl text-foreground mb-1">Brother&Queen</h1>
         <p className="text-muted-foreground mb-6 text-sm">
           {user?.first_name
             ? `Salom, ${user.first_name}! Davom etish uchun raqamingizni ulashing.`

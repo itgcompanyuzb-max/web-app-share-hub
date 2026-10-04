@@ -1,5 +1,4 @@
-import logoUrl from "@/assets/como-logo.jpg";
-const logo = { url: logoUrl };
+import logo from "@/assets/brother-queen-logo.asset.json";
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,8 +32,6 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   const { data: siteSettings } = useGetSiteSettings({ query: { queryKey: getGetSiteSettingsQueryKey() } });
-  const siteName = siteSettings?.siteName || "Como Pizza";
-  const logoUrl = siteSettings?.logoUrl || null;
 
   const { data: banners, isLoading: loadingBanners } = useListBanners({ query: { queryKey: getListBannersQueryKey() } });
   const { data: categories, isLoading: loadingCategories } = useListCategories({ query: { queryKey: getListCategoriesQueryKey() } });
@@ -140,24 +137,7 @@ export default function Home() {
 
       {/* Header */}
       <div className="sticky top-0 z-40 glass-panel border-b border-white/20 dark:border-white/10 px-4 py-3 flex items-center justify-between">
-        <div className="absolute inset-x-0 bottom-0 h-[3px] flag-stripe opacity-90" />
-        {logoUrl ? (
-          <img src={logoUrl} alt={siteName} className="h-9 w-auto max-w-[130px] object-contain" />
-        ) : (
-          <div className="flex items-center gap-2.5">
-            <img
-              src={logo.url}
-              alt="Como Pizza logotipi"
-              className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/20"
-            />
-            <div className="leading-tight">
-              <h1 className="font-display text-lg tracking-wide text-primary">{siteName}</h1>
-              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                The spirit of Italy
-              </p>
-            </div>
-          </div>
-        )}
+        <img src={logo.url} alt="Brother&Queen" className="h-12 w-28 object-cover object-center" />
 
         <Link href="/chat">
           <Button variant="ghost" size="icon" className="rounded-full bg-muted/50 w-10 h-10">
